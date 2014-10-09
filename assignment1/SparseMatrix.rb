@@ -62,11 +62,9 @@ class SparseMatrix
     #Preconditions
     assert_equal(self.rows,self.cols)
 
-    if rows == 2 && cols == 2
-		  self.matrix[[1,1]].to_f*self.matrix[[2,2]].to_f-self.matrix[[1,2]].to_f*self.matrix[[2,1]].to_f
-	  else
-		  (1..cols).map{|i| (-1)**(i+1)*self.matrix[[i,1]].to_f*SparseMatrix.new(self.cols-1,self.rows-1,Hash[Hash[self.matrix.reject{|k,v| k[1] == 1 || k[0] == i}].map{|k,v| (k[0] < i ? [[k[0],k[1]-1],v] : [[k[0]-1,k[1]-1],v])}]).determinant}.reduce(:+)
-		end
+    (1..cols).map{|i| (i == cols && i == 2 ? 0 : (self.cols == 2 ? self.matrix[[1,1]].to_f*self.matrix[[2,2]].to_f-self.matrix[[1,2]].to_f*self.matrix[[2,1]].to_f : (-1)**(i+1)*self.matrix[[i,1]].to_f*SparseMatrix.new(self.cols-1,self.rows-1,Hash[Hash[self.matrix.reject{|k,v| k[1] == 1 || k[0] == i}].map{|k,v| (k[0] < i ? [[k[0],k[1]-1],v] : [[k[0]-1,k[1]-1],v])}]).determinant))}.reduce(:+)
+    
+    #LOL
 
     #Postconditions
     assert(result.respond_to?:to_i)
