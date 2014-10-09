@@ -206,33 +206,14 @@ class SparseMatrix
   end
 
   def plus(m)
-    #Preconditions
-    assert_equal(self.cols,m.cols)
-    assert_equal(self,rows,m.rows)
-
     result=SparseMatrix.new(self.cols,self.rows,self.matrix.merge(m.matrix) {|key, v1, v2| v1+v2})
-
-    #Postconditions
-    assert(result.rows==self.rows)
-    assert(result.cols==self.cols)
   end
 
   def minus(m)
-    #Preconditions
-    assert_equal(self.cols,m.cols)
-    assert_equal(self,rows,m.rows)
-
     result=SparseMatrix.new(self.cols,self.rows,self.matrix.merge(m.negate.matrix) {|key, v1, v2| v1+v2})
-    
-    #Postconditions
-    assert(result.rows==self.rows)
-    assert(result.cols==self.cols)
   end
 
   def times(m)
-    #Preconditions
-    assert(m.respond_to?:*)
-
     case(m)
       when Numeric
       result=SparseMatrix.new(self.cols,self.rows)
@@ -248,31 +229,15 @@ class SparseMatrix
       end
       result.matrix.reject!{|k,v| v==0} 
     end
-
-    #Postconditions
-    assert_equal(result.cols,self.cols)
   end
 
   def exp(k)
-    #Preconditions
-    assert(self.square?)
-    assert(k.respond_to?:to_i)
     result=self.dup
     k.times {result=result*self}
-
-    #Postconditions
-    assert_equal(result.rows,self.rows)
-    assert_equal(result.cols,self.cols)
   end
 
   def negate!()
-    #Preconditions
-    assert(self.matrix!=nil)
-
     SparseMatrix.new(self.cols,self.rows,self.matrix.merge(self.matrix) {|key,v1,v2| -v2})
-
-    #Postconditions
-    assert(self.matrix!=nil)
   end
 
   def get(i,j)

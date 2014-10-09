@@ -121,4 +121,97 @@ class TestSparseMatrix<Minitest::Test
     assert_equal(result,6)
   end
 
+  def test_negate
+    test_matrix=SparseMatrix.new(7,4,{[1,1]=>6,[2,3]=>-5,[7,4]=>16})
+
+    #Preconditions
+    assert(test_matrix.matrix!=nil)
+
+    test_matrix.negate!
+
+    #Postconditions
+    assert(test_matrix.matrix!=nil)
+    assert_equal(test_matrix[1,1],-6)
+    assert_equal(test_matrix[2,3],5)
+  end
+
+  def test_times_matrix
+    a=SparseMatrix.new(7,4,{[1,1]=>6,[2,3]=>-5,[7,4]=>16})
+    b=a.t
+
+    #Preconditions
+    assert(m.respond_to?:*)
+
+    result=a*b
+
+    #Postconditions
+    assert_equal(result.cols,b.cols)
+    assert_equal(result.rows,a.rows)
+  end
+
+  def test_times_scalar
+    test_matrix=SparseMatrix.new(7,4,{[1,1]=>6,[2,3]=>-5,[7,4]=>16})
+    c=6
+
+    #Preconditions
+    assert(m.respond_to?:*)
+    assert(c.respond_to?:to_i)
+
+    result=test_matrix*c.to_i
+
+    #Postconditions
+    assert_equal(result.cols,test_matrix.cols)
+    assert_equal(result.rows,test_matrix.rows)
+    assert_equal(result[1,1],test_matrix[1,1]*c)
+  end
+
+  def test_exp
+    test_matrix=SparseMatrix.new(7,7,{[1,1]=>6,[2,3]=>-5,[7,4]=>16})
+    k=3
+
+    #Preconditions
+    assert(test_matrix.square?)
+    assert(k.respond_to?:to_i)
+    
+    result=test_matrix.exp(k)
+
+    #Postconditions
+    assert_equal(result.rows,test_matrix.rows)
+    assert_equal(result.cols,test_matrix.cols)
+  end
+
+  def test_plus
+    a=SparseMatrix.new(7,4,{[1,1]=>6,[2,3]=>-5,[7,4]=>16})
+    b=SparseMatrix.new(7,4,{[1,1]=>-2,[2,3]=>15,[1,5]=>-1})
+
+    #Preconditions
+    assert_equal(a.cols,b.cols)
+    assert_equal(a,rows,b.rows)
+
+    result=a+b
+
+    #Postconditions
+    assert_equal(a.cols,b.cols)
+    assert_equal(a,rows,b.rows)
+    assert_equal(result[1,1],a[1,1]+b[1,1])
+    assert_equal(result[1,5],b[1,5])
+  end
+
+  def test_minus
+    a=SparseMatrix.new(7,4,{[1,1]=>6,[2,3]=>-5,[7,4]=>16})
+    b=SparseMatrix.new(7,4,{[1,1]=>-2,[2,3]=>15,[1,5]=>-1})
+
+    #Preconditions
+    assert_equal(a.cols,b.cols)
+    assert_equal(a,rows,b.rows)
+
+    result=a-b
+
+    #Postconditions
+    assert_equal(a.cols,b.cols)
+    assert_equal(a,rows,b.rows)
+    assert_equal(result[1,1],a[1,1]-b[1,1])
+    assert_equal(result[1,5],-b[1,5])
+  end
+
 end
