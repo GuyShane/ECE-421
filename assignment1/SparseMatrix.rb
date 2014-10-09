@@ -215,6 +215,22 @@ class SparseMatrix
     #Preconditions
     assert(m.respond_to?:*)
 
+    case(m)
+      when Numeric
+      result=SparseMatrix.new(self.cols,self.rows)
+      self.matrix.each {|k,v| result[k[0],k[1]]=v*m}
+      when SparseMatrix
+      result=SparseMatrix.new(self.cols,m.rows)
+      (0..m.cols).each do |i|
+        (0..self.rows).each do |j|
+          (0..self.cols).each do |k|
+            result[j,i]+=self[j,k]*m[k,i]
+          end
+        end
+      end
+      result.matrix.reject!{|k,v| v==0} 
+    end
+
     #Postconditions
     assert_equal(result.cols,self.cols)
   end
@@ -223,6 +239,8 @@ class SparseMatrix
     #Preconditions
     assert(self.square?)
     assert(k.respond_to?:to_i)
+    result=self.dup
+    k.times {result=result*self}
 
     #Postconditions
     assert_equal(result.rows,self.rows)
@@ -256,6 +274,8 @@ class SparseMatrix
     #Preconditions
     assert(i<=self.cols)
     assert(j<=self.rows)
+    assert(i>=1)
+    assert(j>=1)    
     assert(v.respond_to?:to_i)
 
     self.matrix[[i,j]]=v
@@ -278,6 +298,8 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
+    @matrix={}
+
     #Postconditions
     assert_equal(self.count,0)
   end
@@ -289,6 +311,7 @@ class SparseMatrix
   alias set put
   alias [] get
   alias t transpose
+  alias * times
 
 end
 

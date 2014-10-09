@@ -4,9 +4,10 @@ class SparseMatrix
 
   def initialize(*args)
     if args.size==1
+      puts args
       @rows=args[0].rows
       @cols=args[0].cols
-      @matrix=args.matrix.dup
+      @matrix=args[0].matrix.dup
     elsif args.size==2
       @cols,@rows=args
       @matrix={}
@@ -28,6 +29,19 @@ class SparseMatrix
 
   def minus(m)
     SparseMatrix.new(self.cols,self.rows,self.matrix.merge(m.negate.matrix) {|key, v1, v2| v1+v2})
+  end
+
+  def times(m)
+    result=SparseMatrix.new(self.cols,m.rows)
+    (0..m.cols).each do |i|
+      (0..self.rows).each do |j|
+        (0..self.cols).each do |k|
+          result[j,i]+=self[j,k]*m[k,i]
+        end
+      end
+    end
+    result.matrix.reject!{|k,v| v==0} 
+    return result
   end
 
   def negate()

@@ -1,0 +1,60 @@
+require './SparseMatrix'
+require 'test/unit'
+
+class TestSparseMatrix<Test::Unit::TestCase
+
+  def test_initialize_matrix(matrix)
+    #Preconditions
+    assert(matrix.cols>0)
+    assert(matrix.rows>0)
+    assert(matrix.is_a?SparseMatrix)
+
+    other=SparseMatrix.new(matrix)
+
+    #Postconditions
+    assert_equal(other.rows,matrix.rows)
+    assert_equal(other.cols,matrix.cols)
+  end
+
+  def test_initialize_dimens(cols,rows)
+    #Preconditions
+    assert(cols>0)
+    assert(rows>0)
+
+    other=SparseMatrx.new(cols,rows)
+
+    #Postconditions
+    assert_equal(other.cols,cols)
+    assert_equal(other.rows,rows)
+  end
+
+  def test_intialize_dok(cols,rows,dok)
+    #Preconditions
+    assert(cols>0)
+    assert(rows>0)
+    assert(dok.is_a?Hash)
+
+    other=SparseMatrix.new(cols,rows,dok)
+
+    #Postconditions
+    assert_equal(other.cols,cols)
+    assert_equal(other.rows,rows)
+    assert_equal(other.matrix,dok)
+  end
+
+  def test_transpose()
+    test_matrix=SparseMatrix.new(7,4,{[1,1]=>6,[2,3]=>-5,[7,4]=>16})
+
+    #Preconditions
+    assert_equal(test_matrix.rows,test_matrix.cols)
+
+    new=test_matrix.transpose()
+
+    #Postconditions
+    assert_equal(new.rows,test_matrix.rows)
+    assert_equal(new.cols,test_matrix.cols)
+  end
+
+
+
+end
