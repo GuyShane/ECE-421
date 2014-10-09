@@ -82,6 +82,8 @@ class SparseMatrix
     assert(ci<self.cols)
     assert(ci<=self.cols)
 
+    SparseMatrix.new(cf-ci+1, rf-ri+1, Hash[Hash[self.matrix.reject{|k,v| k[1] < ri || k[1] > rf || k[0] < ci || k[0] > cf}].map{|k,v| [[k[0]-ci+1,k[1]-ri+1],v]}])
+
     #Postconditions
     assert(self.rows>=result.rows)
     assert(self.cols>=result.cols)
@@ -91,6 +93,8 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
+    self.matrix.values.all?(&:real?)
+
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
   end
@@ -98,6 +102,8 @@ class SparseMatrix
   def regular?()
     #Preconditions
     assert(self.matrix!=nil)
+
+    !self.singular?
 
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
@@ -107,6 +113,8 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
+    SparseMatrix.new(self.rows,self.cols,Hash[self.matrix.map{|k,v| [k,v.round(digits)]}])
+
     #Postconditions
     assert(result.rows==self.rows)
     assert(result.cols==self.cols)
@@ -115,6 +123,8 @@ class SparseMatrix
   def singular?()
     #Preconditions
     assert(self.matrix!=nil)
+    
+    self.determinant == 0
 
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
@@ -124,6 +134,8 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
+    (1..rows).map{|i| self.matrix[[i,i]].to_i}.inject(0, &:+)
+
     #Postconditions
     assert(k.respond_to?:to_i)
   end
@@ -131,6 +143,8 @@ class SparseMatrix
   def square?()
     #Preconditions
     assert(self.matrix!=nil)
+
+    self.rows == self.cols
 
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))    
@@ -149,6 +163,8 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
+    self.matrix.empty?
+
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
   end
@@ -156,6 +172,8 @@ class SparseMatrix
   def identity(size)
     #Preconditions
     assert(size.respond_to?:to_i)
+
+    SparseMatrix.new(size, size, Hash[(1..size).map{|i| [[i,i],1]}])
 
     #Postconditions
     assert(result.rows==result.cols)
