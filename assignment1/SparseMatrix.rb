@@ -299,6 +299,8 @@ class SparseMatrix
   alias set put
   alias [] get
   alias t transpose
+  alias det determinant
+  alias inv inverse
 
 end
 
