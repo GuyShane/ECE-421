@@ -93,6 +93,8 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
+    self.matrix.values.all?(&:real?)
+
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
   end
