@@ -62,7 +62,7 @@ class SparseMatrix
     #Preconditions
     assert_equal(self.rows,self.cols)
 
-    (1..cols).map{|i| (i == cols && i == 2 || self.matrix[[i,1]].to_i == 0 ? 0 : (self.cols == 2 ? self.matrix[[1,1]].to_f*self.matrix[[2,2]].to_f-self.matrix[[1,2]].to_f*self.matrix[[2,1]].to_f : (-1)**(i+1)*self.matrix[[i,1]].to_f*SparseMatrix.new(self.cols-1,self.rows-1,Hash[Hash[self.matrix.reject{|k,v| k[1] == 1 || k[0] == i}].map{|k,v| (k[0] < i ? [[k[0],k[1]-1],v] : [[k[0]-1,k[1]-1],v])}]).determinant))}.reduce(:+)
+    (1..cols).map{|i| (i == cols && i == 2 ? 0 : (self.cols == 2 ? self.matrix[[1,1]].to_f*self.matrix[[2,2]].to_f-self.matrix[[1,2]].to_f*self.matrix[[2,1]].to_f : (-1)**(i+1)*self.matrix[[i,1]].to_f*SparseMatrix.new(self.cols-1,self.rows-1,Hash[Hash[self.matrix.reject{|k,v| k[1] == 1 || k[0] == i}].map{|k,v| (k[0] < i ? [[k[0],k[1]-1],v] : [[k[0]-1,k[1]-1],v])}]).determinant))}.reduce(:+)
     
     #LOL
 
@@ -75,8 +75,18 @@ class SparseMatrix
     assert_equal(self.rows,self.cols)
     assert_not_equal(self.det,0)
 
+    self.cofactorMatrix.transpose.times(1/self.determinant)
+
     #Postconditions
     assert_equal(self*result,SparseMatrix.identity)
+  end
+  
+  def cofactorMatrix()
+	  SparseMatrix.new(self.cols,self.rows,Hash[self.matrix.map{|k,v| [k,self.cofactor(k[0],k[1])]}])
+  end
+  
+  def cofactor(i,j)
+	  (-1)**(i+j)*SparseMatrix.new(self.cols-1,self.rows-1,Hash[Hash[self.matrix.reject{|x,y| x[0] == i || x[1] == j}].map{|x,y| (x[0] < i ? (x[1] < j ? [[x[0],x[1]],y] : [[x[0],x[1]-1],y]) : (x[1] < j ? [[x[0]-1,x[1]],y] : [[x[0]-1,x[1]-1],y] ))}]).determinant
   end
 
   def minor(ri,rf,ci,cf)
@@ -312,6 +322,8 @@ class SparseMatrix
   alias [] get
   alias t transpose
   alias * times
+  alias det determinant
+  alias inv inverse
 
 end
 
