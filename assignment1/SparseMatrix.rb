@@ -129,7 +129,7 @@ class SparseMatrix
 
   def zero?()
     #Checks if all the entries in the matrix are zero. Returns a boolean value.
-    result=self.matrix.values.all?{|v| v == 0}
+    self.matrix.values.all?{|v| v == 0}
   end
 
   def SparseMatrix.identity(size)
@@ -182,7 +182,7 @@ class SparseMatrix
   def get(i,j)
     #Returns the value in the matrix at position[i,j]
     #If there is no value there, it returns 0
-    result=self.matrix[[i,j]].to_i
+    self.matrix[[i,j]].to_i
   end
 
   def put(i,j,v)
@@ -192,7 +192,7 @@ class SparseMatrix
 
   def count()
     #Returns the number of non zero elements in the matrix
-    result=self.matrix.size
+    self.matrix.size
   end
 
   def clear!()
