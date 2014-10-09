@@ -103,6 +103,8 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
+    !self.singular?
+
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
   end
@@ -121,6 +123,8 @@ class SparseMatrix
   def singular?()
     #Preconditions
     assert(self.matrix!=nil)
+    
+    self.determinant == 0
 
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
