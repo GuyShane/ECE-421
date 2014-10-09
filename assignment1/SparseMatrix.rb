@@ -10,6 +10,10 @@ class SparseMatrix
     assert(matrix.rows>0)
     assert(matrix.is_a?SparseMatrix)
 
+    @rows=matrix.rows
+    @cols=matrix.cols
+    @matrix=matrix.matrix.dup
+
     #Postconditions
     assert_equal(self.rows,matrix.rows)
     assert_equal(self.cols,matrix.cols)
@@ -19,6 +23,9 @@ class SparseMatrix
     #Preconditions
     assert(cols>0)
     assert(rows>0)
+    
+    @cols,@rows=cols,rows
+    @matrix={}
 
     #Postconditions
     assert_equal(self.cols,cols)
@@ -30,6 +37,9 @@ class SparseMatrix
     assert(cols>0)
     assert(rows>0)
     assert(dok.is_a?Hash)
+    
+    @cols,@rows=cols,rows
+    @matrix=dok.dup
 
     #Postconditions
     assert_equal(self.cols,cols)
@@ -40,6 +50,8 @@ class SparseMatrix
   def transpose()
     #Preconditions
     assert_equal(self.rows,self.cols)
+
+    result=SparseMatrix.new(self.rows,self.cols,Hash[self.matrix.map{|k,v| [k.reverse,v]}])
 
     #Postconditions
     assert_equal(result.rows,self.rows)
@@ -155,6 +167,8 @@ class SparseMatrix
     assert_equal(self.cols,m.cols)
     assert_equal(self,rows,m.rows)
 
+    result=SparseMatrix.new(self.cols,self.rows,self.matrix.merge(m.matrix) {|key, v1, v2| v1+v2})
+
     #Postconditions
     assert(result.rows==self.rows)
     assert(result.cols==self.cols)
@@ -164,6 +178,8 @@ class SparseMatrix
     #Preconditions
     assert_equal(self.cols,m.cols)
     assert_equal(self,rows,m.rows)
+
+    result=SparseMatrix.new(self.cols,self.rows,self.matrix.merge(m.negate.matrix) {|key, v1, v2| v1+v2})
     
     #Postconditions
     assert(result.rows==self.rows)
@@ -192,6 +208,8 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
+    SparseMatrix.new(self.cols,self.rows,self.matrix.merge(self.matrix) {|key,v1,v2| -v2})
+
     #Postconditions
     assert(self.matrix!=nil)
   end
@@ -200,6 +218,8 @@ class SparseMatrix
     #Preconditions
     assert(i<=self.cols)
     assert(j<=self.rows)
+
+    result=self.matrix[[i,j]].to_i
 
     #Postconditions
     assert(result!=nil)
@@ -211,6 +231,8 @@ class SparseMatrix
     assert(j<=self.rows)
     assert(v.respond_to?:to_i)
 
+    self.matrix[[i,j]]=v
+
     #Postconditions
     assert_equal(self[i,j],v)
   end
@@ -218,6 +240,8 @@ class SparseMatrix
   def count()
     #Preconditions
     assert(self.matrix!=nil)
+
+    result=self.matrix.size
 
     #Postconditions
     assert(result!=nil)
@@ -230,6 +254,14 @@ class SparseMatrix
     #Postconditions
     assert_equal(self.count,0)
   end
+
+  alias + plus
+  alias - minus
+  alias -@ negate
+  alias []= put
+  alias set put
+  alias [] get
+  alias t transpose
 
 end
 
