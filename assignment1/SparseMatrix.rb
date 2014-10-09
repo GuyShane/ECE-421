@@ -158,7 +158,8 @@ class SparseMatrix
     assert(size.respond_to?:to_i)
 
     #Postconditions
-    assert(result.rows==result.cols==size)
+    assert(result.rows==result.cols)
+    assert(result.cols=size)
     assert_equal(self.trace,k)
   end
 
