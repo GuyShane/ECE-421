@@ -62,6 +62,10 @@ class SparseMatrix
     #Preconditions
     assert_equal(self.rows,self.cols)
 
+    (1..cols).map{|i| (i == cols && i == 2 || self.matrix[[i,1]].to_i == 0 ? 0 : (self.cols == 2 ? self.matrix[[1,1]].to_f*self.matrix[[2,2]].to_f-self.matrix[[1,2]].to_f*self.matrix[[2,1]].to_f : (-1)**(i+1)*self.matrix[[i,1]].to_f*SparseMatrix.new(self.cols-1,self.rows-1,Hash[Hash[self.matrix.reject{|k,v| k[1] == 1 || k[0] == i}].map{|k,v| (k[0] < i ? [[k[0],k[1]-1],v] : [[k[0]-1,k[1]-1],v])}]).determinant))}.reduce(:+)
+    
+    #LOL
+
     #Postconditions
     assert(result.respond_to?:to_i)
   end
@@ -113,7 +117,7 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
-    result=SparseMatrix.new(self.rows,self.cols,Hash[self.matrix.map{|k,v| [k,v.round(digits)]}])
+    result=SparseMatrix.new(self.cols,self.rows,Hash[self.matrix.map{|k,v| [k,v.round(digits)]}])
 
     #Postconditions
     assert(result.rows==self.rows)
@@ -134,7 +138,7 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
-    k=(1..rows).map{|i| self.matrix[[i,i]].to_i}.inject(0, &:+)
+    k=(1..rows).map{|i| self.matrix[[i,i]].to_f}.inject(0, &:+)
 
     #Postconditions
     assert(k.respond_to?:to_i)
