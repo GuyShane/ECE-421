@@ -219,7 +219,7 @@ class TestSparseMatrix<Minitest::Test
     test_matrix=SparseMatrix.new(5,5,{[1,1]=>6,[2,2]=>-5,[3,3]=>1,[5,4]=>16,[5,5]=>4,[4,4]=>-3})
 
     #Preconditions
-    assert(test_matrix.equals?)
+    assert(test_matrix.square?)
 
     result=test_matrix.determinant()
 
@@ -232,8 +232,8 @@ class TestSparseMatrix<Minitest::Test
     test_matrix=SparseMatrix.new(5,5,{[1,1]=>6,[2,2]=>-5,[3,3]=>1,[5,4]=>16,[5,5]=>4,[4,4]=>-3})
 
     #Preconditions
-    assert_equal(test_matrix.square?)
-    assert_not_equal(test_matrix.det,0)
+    assert(test_matrix.square?)
+    assert(test_matrix.det!=0)
 
     new=test_matrix.inverse()
 
@@ -371,18 +371,21 @@ class TestSparseMatrix<Minitest::Test
   end
 
   def test_symmetric
-    test_matrix2=SparseMatrix.new(5,5,{[1,1]=>6,[2,3]=>-5,[5,4]=>16})
+    test_matrix1=SparseMatrix.new(5,5,{[1,1]=>6,[2,3]=>-5,[5,4]=>16})
     test_matrix2=SparseMatrix.identity(5)
 
     #Preconditions
-    assert(test_matrix.matrix!=nil)
-    assert(test_matrix.square?)
+    assert(test_matrix1.matrix!=nil)
+    assert(test_matrix1.square?)
+    assert(test_matrix2.matrix!=nil)
+    assert(test_matrix2.square?)
 
     result1=test_matrix1.symmetric?
     result2=test_matrix2.symmetric?
 
     #Postconditions
-    assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))   
+    assert(result1.is_a?(TrueClass)||result1.is_a?(FalseClass))   
+    assert(result2.is_a?(TrueClass)||result2.is_a?(FalseClass))   
     assert(!result1)
     assert(result2)
   end
@@ -392,13 +395,15 @@ class TestSparseMatrix<Minitest::Test
     test_matrix2=SparseMatrix.new(7,8)
 
     #Preconditions
-    assert(test_matrix.matrix!=nil)
+    assert(test_matrix1.matrix!=nil)
+    assert(test_matrix2.matrix!=nil)
 
     result1=test_matrix1.zero?
     result2=test_matrix2.zero?
 
     #Postconditions
-    assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
+    assert(result1.is_a?(TrueClass)||result1.is_a?(FalseClass))
+    assert(result2.is_a?(TrueClass)||result2.is_a?(FalseClass))
     assert(!result1)
     assert(result2)
   end
@@ -413,7 +418,7 @@ class TestSparseMatrix<Minitest::Test
 
     #Postconditions
     assert(test_matrix.square?)
-    assert(test_matrix.cols=size)
+    assert(test_matrix.cols==size)
     assert_equal(test_matrix.trace,size)
   end
 

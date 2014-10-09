@@ -102,7 +102,7 @@ class SparseMatrix
     !self.singular?
   end
 
-  def round(digits=0)
+  def round(digits)
   	#Rounds all the entries in the matrix to specified number of digits. Returns a new matrix.
     SparseMatrix.new(self.cols,self.rows,Hash[self.matrix.map{|k,v| [k,v.round(digits)]}])
   end
@@ -144,7 +144,7 @@ class SparseMatrix
 
   def minus(m)
     #Matrix subtraction. Returns a new matrix
-    SparseMatrix.new(self.cols,self.rows,self.matrix.merge(m.negate.matrix) {|key, v1, v2| v1+v2})
+    SparseMatrix.new(self.cols,self.rows,self.matrix.merge(m.negate!.matrix) {|key, v1, v2| v1+v2})
   end
 
   def times(m)
@@ -172,6 +172,7 @@ class SparseMatrix
     #Matrix exponentiation. Must be done on a square matrix
     result=self.dup
     k.times {result=result*self}
+    return result
   end
 
   def negate!()
