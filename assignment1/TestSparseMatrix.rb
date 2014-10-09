@@ -48,7 +48,7 @@ class TestSparseMatrix<Minitest::Test
     assert_equal(other.matrix,dok)
   end
 
-  def test_transpose()
+  def test_transpose
     test_matrix=SparseMatrix.new(7,4,{[1,1]=>6,[2,3]=>-5,[7,4]=>16})
 
     #Preconditions
@@ -61,6 +61,64 @@ class TestSparseMatrix<Minitest::Test
     assert_equal(new.cols,test_matrix.rows)
   end
 
+  def test_clear
+    test_matrix=SparseMatrix.new(7,4,{[1,1]=>6,[2,3]=>-5,[7,4]=>16})
 
+    #Preconditions
+    assert(self.matrix!=nil)
+
+    test_matrix=test_matrix.clear!
+
+    #Postconditions
+    assert_equal(self.count,0)
+  end
+
+  def test_count
+    test_matrix=SparseMatrix.new(7,4,{[1,1]=>6,[2,3]=>-5,[7,4]=>16})
+
+    #Preconditions
+    assert(self.matrix!=nil)
+
+    result=test_matrix.count
+
+    #Postconditions
+    assert(result!=nil)
+    assert_equal(result,test_matrix.matrix.count)
+  end
+
+  def test_put
+    test_matrix=SparseMatrix.new(5,6)
+    to_put=5
+    i=3
+    j=4
+
+    #Preconditions
+    assert(i<=test_matrix.cols)
+    assert(j<=test_matrix.rows)
+    assert(i>=1)
+    assert(j>=1)    
+    assert(v.respond_to?:to_i)
+    
+    test_matrix[i,j]=to_put.to_i
+
+    #Postconditions
+    assert_equal(test_matrix[i,j],to_put)
+  end
+
+  def test_get
+    test_matrix=SparseMatrix.new(7,4,{[1,1]=>6,[2,3]=>-5,[7,4]=>16})
+
+    #Preconditions
+    assert(i<=test_matrix.cols)
+    assert(j<=test_matrix.rows)
+    assert(i>=1)
+    assert(j>=1)
+
+    result=test_matrix[1,1]
+
+    #Postconditions
+    assert(result!=nil)
+    assert_equal(result,6)
+  end
 
 end

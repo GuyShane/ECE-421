@@ -1,9 +1,23 @@
-require 'test/unit'
-
 class SparseMatrix
 
   attr_reader :rows, :cols, :matrix
 
+  def initialize(*args)
+    if args.size==1
+      puts args
+      @rows=args[0].rows
+      @cols=args[0].cols
+      @matrix=args[0].matrix.dup
+    elsif args.size==2
+      @cols,@rows=args
+      @matrix={}
+    else
+      @cols,@rows=args
+      @matrix=args[2].dup
+    end
+  end
+
+=begin
   def initialize(matrix)
     #Preconditions
     assert(matrix.cols>0)
@@ -46,16 +60,10 @@ class SparseMatrix
     assert_equal(self.rows,rows)
     assert_equal(self.matrix,dok)
   end
+=end
 
   def transpose()
-    #Preconditions
-    assert_equal(self.rows,self.cols)
-
     result=SparseMatrix.new(self.rows,self.cols,Hash[self.matrix.map{|k,v| [k.reverse,v]}])
-
-    #Postconditions
-    assert_equal(result.rows,self.rows)
-    assert_equal(result.cols,self.cols)
   end
 
   def determinant()
@@ -268,50 +276,19 @@ class SparseMatrix
   end
 
   def get(i,j)
-    #Preconditions
-    assert(i<=self.cols)
-    assert(j<=self.rows)
-    assert(i>=1)
-    assert(j>=1)
-
     result=self.matrix[[i,j]].to_i
-
-    #Postconditions
-    assert(result!=nil)
   end
 
   def put(i,j,v)
-    #Preconditions
-    assert(i<=self.cols)
-    assert(j<=self.rows)
-    assert(i>=1)
-    assert(j>=1)    
-    assert(v.respond_to?:to_i)
-
     self.matrix[[i,j]]=v
-
-    #Postconditions
-    assert_equal(self[i,j],v)
   end
 
   def count()
-    #Preconditions
-    assert(self.matrix!=nil)
-
     result=self.matrix.size
-
-    #Postconditions
-    assert(result!=nil)
   end
 
-  def clear()
-    #Preconditions
-    assert(self.matrix!=nil)
-
+  def clear!()
     @matrix={}
-
-    #Postconditions
-    assert_equal(self.count,0)
   end
 
   alias + plus
