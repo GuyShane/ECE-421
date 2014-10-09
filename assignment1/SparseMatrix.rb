@@ -109,6 +109,8 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
+    SparseMatrix.new(self.rows,self.cols,Hash[self.matrix.map{|k,v| [k,v.round(digits)]}])
+
     #Postconditions
     assert(result.rows==self.rows)
     assert(result.cols==self.cols)
