@@ -155,6 +155,8 @@ class SparseMatrix
     assert(self.matrix!=nil)
     assert(self.square?)
 
+    self.minus(self.transpose).zero?
+
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))    
   end
@@ -163,7 +165,7 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
-    self.matrix.empty?
+    self.matrix.values.all?{|v| v == 0}
 
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
