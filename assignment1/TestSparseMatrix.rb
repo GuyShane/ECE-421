@@ -65,19 +65,19 @@ class TestSparseMatrix<Minitest::Test
     test_matrix=SparseMatrix.new(7,4,{[1,1]=>6,[2,3]=>-5,[7,4]=>16})
 
     #Preconditions
-    assert(self.matrix!=nil)
+    assert(test_matrix.matrix!=nil)
 
     test_matrix=test_matrix.clear!
 
     #Postconditions
-    assert_equal(self.count,0)
+    assert_equal(test_matrix.count,0)
   end
 
   def test_count
     test_matrix=SparseMatrix.new(7,4,{[1,1]=>6,[2,3]=>-5,[7,4]=>16})
 
     #Preconditions
-    assert(self.matrix!=nil)
+    assert(test_matrix.matrix!=nil)
 
     result=test_matrix.count
 
@@ -97,7 +97,7 @@ class TestSparseMatrix<Minitest::Test
     assert(j<=test_matrix.rows)
     assert(i>=1)
     assert(j>=1)    
-    assert(v.respond_to?:to_i)
+    assert(to_put.respond_to?:to_i)
     
     test_matrix[i,j]=to_put.to_i
 
@@ -107,6 +107,8 @@ class TestSparseMatrix<Minitest::Test
 
   def test_get
     test_matrix=SparseMatrix.new(7,4,{[1,1]=>6,[2,3]=>-5,[7,4]=>16})
+    i=3
+    j=2
 
     #Preconditions
     assert(i<=test_matrix.cols)
@@ -140,7 +142,7 @@ class TestSparseMatrix<Minitest::Test
     b=a.t
 
     #Preconditions
-    assert(m.respond_to?:*)
+    assert_equal(a.cols,b.rows)
 
     result=a*b
 
@@ -154,7 +156,6 @@ class TestSparseMatrix<Minitest::Test
     c=6
 
     #Preconditions
-    assert(m.respond_to?:*)
     assert(c.respond_to?:to_i)
 
     result=test_matrix*c.to_i
@@ -186,13 +187,13 @@ class TestSparseMatrix<Minitest::Test
 
     #Preconditions
     assert_equal(a.cols,b.cols)
-    assert_equal(a,rows,b.rows)
+    assert_equal(a.rows,b.rows)
 
     result=a+b
 
     #Postconditions
     assert_equal(a.cols,b.cols)
-    assert_equal(a,rows,b.rows)
+    assert_equal(a.rows,b.rows)
     assert_equal(result[1,1],a[1,1]+b[1,1])
     assert_equal(result[1,5],b[1,5])
   end
@@ -203,13 +204,13 @@ class TestSparseMatrix<Minitest::Test
 
     #Preconditions
     assert_equal(a.cols,b.cols)
-    assert_equal(a,rows,b.rows)
+    assert_equal(a.rows,b.rows)
 
     result=a-b
 
     #Postconditions
     assert_equal(a.cols,b.cols)
-    assert_equal(a,rows,b.rows)
+    assert_equal(a.rows,b.rows)
     assert_equal(result[1,1],a[1,1]-b[1,1])
     assert_equal(result[1,5],-b[1,5])
   end
