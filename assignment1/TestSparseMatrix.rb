@@ -216,7 +216,7 @@ class TestSparseMatrix<Minitest::Test
   end
   
   def test_determinant
-    test_matrix=SparseMatrix.new(5,5,{[1,1]=>6,[2,3]=>-5,[5,4]=>16})
+    test_matrix=SparseMatrix.new(5,5,{[1,1]=>6,[2,2]=>12,[3,3]=>-3,[4,4]=>4,[5,5]=>9})
 
     #Preconditions
     assert_equal(self.rows,self.cols)
@@ -225,6 +225,7 @@ class TestSparseMatrix<Minitest::Test
 
     #Postconditions
     assert(result.respond_to?:to_i)
+    assert_equal(result,-1296)
   end
 
   def test_inverse
