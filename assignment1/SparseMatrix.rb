@@ -69,7 +69,7 @@ class SparseMatrix
   def inverse()
     #Preconditions
     assert_equal(self.rows,self.cols)
-    assert_not_equal(a.det,0)
+    assert_not_equal(self.det,0)
 
     #Postconditions
     assert_equal(self*result,SparseMatrix.identity)
@@ -82,7 +82,7 @@ class SparseMatrix
     assert(ci<self.cols)
     assert(ci<=self.cols)
 
-    SparseMatrix.new(cf-ci+1, rf-ri+1, Hash[Hash[self.matrix.reject{|k,v| k[1] < ri || k[1] > rf || k[0] < ci || k[0] > cf}].map{|k,v| [[k[0]-ci+1,k[1]-ri+1],v]}])
+    result=SparseMatrix.new(cf-ci+1, rf-ri+1, Hash[Hash[self.matrix.reject{|k,v| k[1] < ri || k[1] > rf || k[0] < ci || k[0] > cf}].map{|k,v| [[k[0]-ci+1,k[1]-ri+1],v]}])
 
     #Postconditions
     assert(self.rows>=result.rows)
@@ -93,7 +93,7 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
-    self.matrix.values.all?(&:real?)
+    result=self.matrix.values.all?(&:real?)
 
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
@@ -103,7 +103,7 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
-    !self.singular?
+    result=!self.singular?
 
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
@@ -113,7 +113,7 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
-    SparseMatrix.new(self.rows,self.cols,Hash[self.matrix.map{|k,v| [k,v.round(digits)]}])
+    result=SparseMatrix.new(self.rows,self.cols,Hash[self.matrix.map{|k,v| [k,v.round(digits)]}])
 
     #Postconditions
     assert(result.rows==self.rows)
@@ -124,7 +124,7 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
     
-    self.determinant == 0
+    result=self.determinant == 0
 
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
@@ -134,7 +134,7 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
-    (1..rows).map{|i| self.matrix[[i,i]].to_i}.inject(0, &:+)
+    k=(1..rows).map{|i| self.matrix[[i,i]].to_i}.inject(0, &:+)
 
     #Postconditions
     assert(k.respond_to?:to_i)
@@ -144,7 +144,7 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
-    self.rows == self.cols
+    result=(self.rows == self.cols)
 
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))    
@@ -163,7 +163,7 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
-    self.matrix.empty?
+    result=self.matrix.empty?
 
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
@@ -173,7 +173,7 @@ class SparseMatrix
     #Preconditions
     assert(size.respond_to?:to_i)
 
-    SparseMatrix.new(size, size, Hash[(1..size).map{|i| [[i,i],1]}])
+    result=SparseMatrix.new(size, size, Hash[(1..size).map{|i| [[i,i],1]}])
 
     #Postconditions
     assert(result.rows==result.cols)
@@ -237,6 +237,8 @@ class SparseMatrix
     #Preconditions
     assert(i<=self.cols)
     assert(j<=self.rows)
+    assert(i>=1)
+    assert(j>=1)
 
     result=self.matrix[[i,j]].to_i
 
