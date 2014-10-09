@@ -1,4 +1,4 @@
-require 'test-unit'
+require 'test/unit'
 
 class SparseMatrix
 
@@ -280,7 +280,7 @@ class SparseMatrix
 
   alias + plus
   alias - minus
-  alias -@ negate
+  alias -@ negate!
   alias []= put
   alias set put
   alias [] get
