@@ -82,6 +82,8 @@ class SparseMatrix
     assert(ci<self.cols)
     assert(ci<=self.cols)
 
+    SparseMatrix.new(cf-ci+1, rf-ri+1, Hash[self.matrix.reject{|k,v| k[1] < ri || k[1] > rf || k[0] < ci || k[0] > cf}])
+
     #Postconditions
     assert(self.rows>=result.rows)
     assert(self.cols>=result.cols)
@@ -132,6 +134,8 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
+    self.rows == self.cols
+
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))    
   end
@@ -149,6 +153,8 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
+    self.matrix.empty?
+
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
   end
@@ -156,6 +162,8 @@ class SparseMatrix
   def identity(size)
     #Preconditions
     assert(size.respond_to?:to_i)
+
+    SparseMatrix.new(size, size, Hash[(1..size).map{|i| [[i,i],1]}])
 
     #Postconditions
     assert(result.rows==result.cols==size)
