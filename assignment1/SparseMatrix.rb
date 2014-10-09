@@ -126,6 +126,8 @@ class SparseMatrix
     #Preconditions
     assert(self.matrix!=nil)
 
+    (1..rows).map{|i| self.matrix[[i,i]].to_i}.inject(0, &:+)
+
     #Postconditions
     assert(k.respond_to?:to_i)
   end
