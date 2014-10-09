@@ -216,54 +216,57 @@ class TestSparseMatrix<Minitest::Test
   end
   
   def test_determinant
-    test_matrix=SparseMatrix.new(5,5,{[1,1]=>6,[2,2]=>12,[3,3]=>-3,[4,4]=>4,[5,5]=>9})
+    test_matrix=SparseMatrix.new(5,5,{[1,1]=>6,[2,2]=>-5,[3,3]=>1,[5,4]=>16,[5,5]=>4,[4,4]=>-3})
 
     #Preconditions
-    assert_equal(self.rows,self.cols)
+    assert(test_matrix.equals?)
 
     result=test_matrix.determinant()
 
     #Postconditions
     assert(result.respond_to?:to_i)
-    assert_equal(result,-1296)
+    assert_equal(result, 360)
   end
 
   def test_inverse
-    test_matrix=SparseMatrix.new(5,5,{[1,1]=>6,[2,3]=>-5,[5,4]=>16})
+    test_matrix=SparseMatrix.new(5,5,{[1,1]=>6,[2,2]=>-5,[3,3]=>1,[5,4]=>16,[5,5]=>4,[4,4]=>-3})
 
     #Preconditions
-    assert_equal(test_matrix.test_matrix,self.cols)
+    assert_equal(test_matrix.square?)
     assert_not_equal(test_matrix.det,0)
 
     new=test_matrix.inverse()
 
     #Postconditions
     assert_equal(test_matrix*new,SparseMatrix.identity(new.rows))
+    assert_equal(new[1,1],1/6)
   end
 
   def test_cofactorMatrix
     test_matrix=SparseMatrix.new(5,5,{[1,1]=>6,[2,3]=>-5,[5,4]=>16})
 
     #Preconditions
-
+    assert(test_matrix.matrix!=nil)
 
     new=test_matrix.cofactorMatrix()
 
     #Postconditions
     assert_equal(test_matrix.rows,new.rows)
     assert_equal(test_matrix.cols,new.cols)
+    assert_equal(new[1,1],test_matrix.cofactor(1,1))
   end
 
   def test_cofactor
     test_matrix=SparseMatrix.new(5,5,{[1,1]=>6,[2,3]=>-5,[5,4]=>16})
 
     #Preconditions
-
+    assert(test_matrix.matrix!=nil)
 
     result=test_matrix.cofactor(1,1)
 
     #Postconditions
     assert(result.respond_to?:to_i)
+    assert_equal(result,test_matrix.minor(2,test_matrix.rows,2,test_matrix.cols).determinant)
   end
 
   def minor(ri,rf,ci,cf)
@@ -279,11 +282,12 @@ class TestSparseMatrix<Minitest::Test
     assert(ci<test_matrix.cols)
     assert(ci<=test_matrix.cols)
 
-    new=test_matrix.minor
+    new=test_matrix.minor(ri,rf,ci,cf)
 
     #Postconditions
     assert(test_matrix.rows>=new.rows)
     assert(test_matrix.cols>=new.cols)
+    assert_equal(new[1,1],test_matrix[2,2])
   end
 
   def test_real
@@ -309,19 +313,21 @@ class TestSparseMatrix<Minitest::Test
 
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
+    assert_equal(!result,test_matrix.determinant==0)
   end
 
   def test_round
-    test_matrix=SparseMatrix.new(5,5,{[1,1]=>6,[2,3]=>-5,[5,4]=>16})
+    test_matrix=SparseMatrix.new(5,5,{[1,1]=>6.53,[2,3]=>-5,[5,4]=>16})
 
     #Preconditions
     assert(test_matrix.matrix!=nil)
 
-    new=test_matrix.round
+    new=test_matrix.round(1)
 
     #Postconditions
     assert(new.rows==test_matrix.rows)
     assert(new.cols==test_matrix.cols)
+    assert_equal(new[1,1],6.5)
   end
 
   def test_singular
@@ -334,6 +340,7 @@ class TestSparseMatrix<Minitest::Test
 
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
+    assert_equal(result,test_matrix.determinant==0)
   end
 
   def test_trace
@@ -359,32 +366,41 @@ class TestSparseMatrix<Minitest::Test
     result=test_matrix.square?
 
     #Postconditions
-    assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))    
+    assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
+    assert(result)   
   end
 
   def test_symmetric
-    test_matrix=SparseMatrix.new(5,5,{[1,1]=>6,[2,3]=>-5,[5,4]=>16})
+    test_matrix2=SparseMatrix.new(5,5,{[1,1]=>6,[2,3]=>-5,[5,4]=>16})
+    test_matrix2=SparseMatrix.identity(5)
 
     #Preconditions
     assert(test_matrix.matrix!=nil)
     assert(test_matrix.square?)
 
-    result=test_matrix.symmetric?
+    result1=test_matrix1.symmetric?
+    result2=test_matrix2.symmetric?
 
     #Postconditions
-    assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))    
+    assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))   
+    assert(!result1)
+    assert(result2)
   end
 
   def test_zero
-    test_matrix=SparseMatrix.new(5,5,{[1,1]=>6,[2,3]=>-5,[5,4]=>16})
+    test_matrix1=SparseMatrix.new(5,5,{[1,1]=>6,[2,3]=>-5,[5,4]=>16})
+    test_matrix2=SparseMatrix.new(7,8)
 
     #Preconditions
     assert(test_matrix.matrix!=nil)
 
-    result=test_matrix.zero?
+    result1=test_matrix1.zero?
+    result2=test_matrix2.zero?
 
     #Postconditions
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
+    assert(!result1)
+    assert(result2)
   end
 
   def test_identity
