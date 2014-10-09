@@ -82,7 +82,7 @@ class SparseMatrix
     assert(ci<self.cols)
     assert(ci<=self.cols)
 
-    SparseMatrix.new(cf-ci+1, rf-ri+1, Hash[self.matrix.reject{|k,v| k[1] < ri || k[1] > rf || k[0] < ci || k[0] > cf}])
+    SparseMatrix.new(cf-ci+1, rf-ri+1, Hash[Hash[self.matrix.reject{|k,v| k[1] < ri || k[1] > rf || k[0] < ci || k[0] > cf}].map{|k,v| [[k[0]-ci+1,k[1]-ri+1],v]}])
 
     #Postconditions
     assert(self.rows>=result.rows)
