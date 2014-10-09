@@ -1,4 +1,4 @@
-require './implementations.rb'
+require './SparseMatrix'
 require 'minitest/autorun'
 
 class TestSparseMatrix<Minitest::Test

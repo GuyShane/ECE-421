@@ -206,14 +206,18 @@ class SparseMatrix
   end
 
   def plus(m)
-    result=SparseMatrix.new(self.cols,self.rows,self.matrix.merge(m.matrix) {|key, v1, v2| v1+v2})
+    #Matrix addition. Returns a new matrix
+    SparseMatrix.new(self.cols,self.rows,self.matrix.merge(m.matrix) {|key, v1, v2| v1+v2})
   end
 
   def minus(m)
-    result=SparseMatrix.new(self.cols,self.rows,self.matrix.merge(m.negate.matrix) {|key, v1, v2| v1+v2})
+    #Matrix subtraction. Returns a new matrix
+    SparseMatrix.new(self.cols,self.rows,self.matrix.merge(m.negate.matrix) {|key, v1, v2| v1+v2})
   end
 
   def times(m)
+    #Either matrix or scalar multiplications
+    #Returns a new matrix
     case(m)
       when Numeric
       result=SparseMatrix.new(self.cols,self.rows)
@@ -229,30 +233,39 @@ class SparseMatrix
       end
       result.matrix.reject!{|k,v| v==0} 
     end
+    return result
   end
 
   def exp(k)
+    #Matrix exponentiation. Must be done on a square matrix
     result=self.dup
     k.times {result=result*self}
   end
 
   def negate!()
+    #Negates all the elements in the matrix
     SparseMatrix.new(self.cols,self.rows,self.matrix.merge(self.matrix) {|key,v1,v2| -v2})
   end
 
   def get(i,j)
+    #Returns the value in the matrix at position[i,j]
+    #If there is no value there, it returns 0
     result=self.matrix[[i,j]].to_i
   end
 
   def put(i,j,v)
+    #Puts the value v into the matrix at position [i,j]
     self.matrix[[i,j]]=v
   end
 
   def count()
+    #Returns the number of non zero elements in the matrix
     result=self.matrix.size
   end
 
   def clear!()
+    #Clears the contents of the matrix.
+    #Leaves the dimensions the same
     @matrix={}
   end
 
