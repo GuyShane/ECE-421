@@ -185,7 +185,7 @@ class SparseMatrix
     assert(result.is_a?(TrueClass)||result.is_a?(FalseClass))
   end
 
-  def identity(size)
+  def SparseMatrix.identity(size)
     #Preconditions
     assert(size.respond_to?:to_i)
 
