@@ -1,2 +1,3 @@
-#class LittleShell?
-#module LittleShell?
+module LittleShell
+
+end
