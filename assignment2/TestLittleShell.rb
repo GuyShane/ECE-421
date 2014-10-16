@@ -1,4 +1,5 @@
 require 'minitest/autorun'
+require 'time'
 
 class TestLittleShell<Minitest::Test
   #`./LittleShell.rb ls`
@@ -65,9 +66,51 @@ class TestLittleShell<Minitest::Test
     `./LittleShell.rb rm cp_test2.txt`
   end
 
-  def test_delay_print
-    `./LittleShell.rb delay_print(5,"hello")`
+  def test_cd
+    `./LittleShell.rb mkdir cd_test`
+    current_dir=`./LittleShell.rb pwd`.rstrip
+    `./LittleShell.rb cd /cd_test`
+    new_dir=`./LittleShell.rb pwd`.rstrip
+    assert_equal(current_dir+"/cd_test",new_dir)
   end
 
+  def test_delay_print
+    start=Time.now
+    `./LittleShell.rb delay_print(2,"hello")`
+    finish=Time.now
+    assert_equal(2,(finish-start).round)
+  end
+
+  def test_file_watch_creation
+    a=0
+    `./LittleShell.rb FileWatchCreation(3,"new.txt") {a=1}`
+    start=Time.now
+    `./LittleShell.rb touch new.txt`
+    finish=Time.now
+    assert_equal(1,a)
+    assert_equal(3,(finish-start).round)
+  end
+
+  def test_file_watch_alter
+    a=0
+    `./LittleShell.rb touch new.txt`
+    `./LittleShell.rb FileWatchAlter(4,"new.txt") {a=1}`
+    start=Time.now
+    `./LittleShell.rb touch new.txt`
+    finish=Time.now
+    assert_equal(1,a)
+    assert_equal(4,(finish-start).round)
+  end
+
+  def test_file_watch_destroy
+    a=0
+    `./LittleShell.rb touch new.txt`
+    `./LittleShell.rb FileWatchDestroy(5,"new.txt") {a=1}`
+    start=Time.now
+    `./LittleShell.rb rm new.txt`
+    finish=Time.now
+    assert_equal(1,a)
+    assert_equal(5,(finish-start).round)
+  end
 
 end
