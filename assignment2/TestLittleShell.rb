@@ -4,149 +4,149 @@ require 'time'
 class TestLittleShell<Minitest::Test
 
   def test_pwd
-    assert_equal(ENV["PWD"],`./LittleShell.rb pwd`.rstrip)
+    assert_equal(ENV["PWD"],`./LittleShell pwd`.rstrip)
   end
 
   def test_mkdir
     #Preconditions
-    assert(!(`./LittlseShell.rb ls`.include? "newdir"))
+    assert(!(`./LittleShell ls`.include? "newdir"))
 
-    `./LittleShell.rb mkdir newdir`
+    `./LittleShell mkdir newdir`
     
     #Postconditions
-    assert(`./LittleShell.rb ls`.include? "newdir")
+    assert(`./LittleShell ls`.include? "newdir")
 
-    `./LittleShell.rb rmdir newdir`
+    `./LittleShell rmdir newdir`
   end
 
   def test_touch
     #Preconditions
-    assert(!(`./LittleShell.rb ls`.include? "newfile.txt"))
+    assert(!(`./LittleShell ls`.include? "newfile.txt"))
 
-    `./LittleShell.rb touch newfile.txt`
+    `./LittleShell touch newfile.txt`
 
     #Postconditions
-    assert(`./LittleShell.rb ls`.include? "newfile.txt")
+    assert(`./LittleShell ls`.include? "newfile.txt")
     
-    `./LittleShell.rb rm newfile.txt`
+    `./LittleShell rm newfile.txt`
   end
 
   def test_mv
     #Preconditions
-    assert(!(`./LittleShell.rb ls`.include? "newfile.txt"))
-    assert(!(`./LittleShell.rb ls`.include? "another.txt"))    
+    assert(!(`./LittleShell ls`.include? "newfile.txt"))
+    assert(!(`./LittleShell ls`.include? "another.txt"))    
     
-    `./LittleShell.rb touch newfile.txt`
-    `./LittleShell.rb mv newfile.txt another.txt`
+    `./LittleShell touch newfile.txt`
+    `./LittleShell mv newfile.txt another.txt`
 
     #Postconditions
-    assert(`./LittleShell.rb ls`.include? "another.txt")
-    assert(!(`./LittleShell.rb ls`.include? "newfile.txt"))
+    assert(`./LittleShell ls`.include? "another.txt")
+    assert(!(`./LittleShell ls`.include? "newfile.txt"))
     
-    `./LittleShell.rb rm another.txt`
+    `./LittleShell rm another.txt`
   end
 
   def test_ls
     #Preconditions
-    assert(!(`./LittleShell.rb ls`.include? "ls_test"))
-    assert(!(`./LittleShell.rb ls`.include? "ls_test/file.txt"))
+    assert(!(`./LittleShell ls`.include? "ls_test"))
+    assert(!(`./LittleShell ls`.include? "ls_test/file.txt"))
 
-    `./LittleShell.rb mkdir ls_test`
-    `./LittleShell.rb touch ls_test/file.txt`
+    `./LittleShell mkdir ls_test`
+    `./LittleShell touch ls_test/file.txt`
 
     #Postconditions
-    assert_equal("file.txt",`./LittleShell.rb ls ls_test/`.rstrip)
+    assert_equal("file.txt",`./LittleShell ls ls_test/`.rstrip)
 
-    `./LittleShell.rb rm ls_test/file.txt`
-    `./LittleShell.rb rmdir ls_test`
+    `./LittleShell rm ls_test/file.txt`
+    `./LittleShell rmdir ls_test`
   end
 
   def test_rm
-    `./LittleShell.rb touch newfile.txt`
+    `./LittleShell touch newfile.txt`
     #Preconditions
-    assert(`./LittleShell.rb ls`.include? "newfile.txt")
+    assert(`./LittleShell ls`.include? "newfile.txt")
 
-    `./LittleShell.rb rm newfile.txt`
+    `./LittleShell rm newfile.txt`
 
     #Postconditions
-    assert(!(`./LittleShell.rb ls`.include? "newfile.txt"))
+    assert(!(`./LittleShell ls`.include? "newfile.txt"))
   end
 
   def test_rmdir
-    `./LittleShell.rb mkdir newdir`
+    `./LittleShell mkdir newdir`
     #Preconditions
-    assert(`./LittleShell.rb ls`.include? "newdir")
+    assert(`./LittleShell ls`.include? "newdir")
 
-    `./LittleShell.rb rmdir newdir`
+    `./LittleShell rmdir newdir`
 
     #Postconditions
-    assert(!(`./LittleShell.rb ls`.include? "newdir"))
+    assert(!(`./LittleShell ls`.include? "newdir"))
   end
 
   def test_cat
-    `./LittleShell.rb echo "testing cat" > cat_test.txt`
+    `./LittleShell echo "testing cat" > cat_test.txt`
     #Preconditions
-    assert(`./LittleShell.rb ls`.include? "cat_test.txt")
+    assert(`./LittleShell ls`.include? "cat_test.txt")
     
-    file_text=`./LittleShell.rb cat cat_test.txt`.rstrip
+    file_text=`./LittleShell cat cat_test.txt`.rstrip
 
     #Postconditions
     assert_equal("testing cat",file_text)
 
-    `./LittleShell.rb rm cat_test.txt`
+    `./LittleShell rm cat_test.txt`
   end
 
   def test_echo
-    assert_equal("hello",`./LittleShell.rb echo "hello"`.rstrip)
+    assert_equal("hello",`./LittleShell echo "hello"`.rstrip)
   end
 
   def test_output_redirect
     #Preconditions
-    assert(!(`./LittleShell.rb ls`.include? "redirect_test.txt"))
+    assert(!(`./LittleShell ls`.include? "redirect_test.txt"))
 
-    `./LittleShell.rb echo "testing redirection" > redirect_test.txt`
+    `./LittleShell echo "testing redirection" > redirect_test.txt`
 
     #Postconditions
-    assert(`./LittleShell.rb ls`.include? "redirect_test.txt")
+    assert(`./LittleShell ls`.include? "redirect_test.txt")
 
-    `./LittleShell.rb rm redirect_test.txt`    
+    `./LittleShell rm redirect_test.txt`    
   end
 
   def test_cp
-    `./LittleShell.rb echo "testing copy" > cp_test.txt`
+    `./LittleShell echo "testing copy" > cp_test.txt`
     #Preconditions
-    assert(`./LittleShell.rb ls`.include? "cp_test.txt")
-    assert(!(`./LittleShell.rb ls`.include? "cp_test2.txt"))    
+    assert(`./LittleShell ls`.include? "cp_test.txt")
+    assert(!(`./LittleShell ls`.include? "cp_test2.txt"))    
 
-    `./LittleShell.rb cp cp_test.txt cp_test2.txt`
+    `./LittleShell cp cp_test.txt cp_test2.txt`
 
     #Postconditions
-    assert_equal(`./LittleShell.rb cat cp_test.txt`,
-                 `./LittleShell.rb cat cp_test2.txt`)
+    assert_equal(`./LittleShell cat cp_test.txt`,
+                 `./LittleShell cat cp_test2.txt`)
 
-    `./LittleShell.rb rm cp_test.txt`
-    `./LittleShell.rb rm cp_test2.txt`
+    `./LittleShell rm cp_test.txt`
+    `./LittleShell rm cp_test2.txt`
   end
 
   def test_cd
-    `./LittleShell.rb mkdir cd_test`
+    `./LittleShell mkdir cd_test`
     #Preconditions
-    assert(`./LittleShell.rb ls`.include? "cd_test")
+    assert(`./LittleShell ls`.include? "cd_test")
 
-    current_dir=`./LittleShell.rb pwd`.rstrip
-    `./LittleShell.rb cd ./cd_test`
-    new_dir=`./LittleShell.rb pwd`.rstrip
+    current_dir=`./LittleShell pwd`.rstrip
+    `./LittleShell cd ./cd_test`
+    new_dir=`./LittleShell pwd`.rstrip
 
     #Postconditions
     assert_equal(current_dir+"/cd_test",new_dir)
 
-    `./LittleShell.rb cd ..`    
-    `./LittleShell.rb rmdir cd_test`
+    `./LittleShell cd ..`    
+    `./LittleShell rmdir cd_test`
   end
 
   def test_delay_print
     start=Time.now
-    `./LittleShell.rb delay_print(2,"hello")`
+    `./LittleShell delay_print(2,"hello")`
     finish=Time.now
 
     #Postconditions
@@ -157,49 +157,49 @@ class TestLittleShell<Minitest::Test
     a=0
     #Preconditions
     assert_equal(0,a)
-    assert(!(`./LittleShell.rb ls`.include? "new.txt"))
+    assert(!(`./LittleShell ls`.include? "new.txt"))
 
-    `./LittleShell.rb FileWatchCreation(3,"new.txt") {a=1}`
+    `./LittleShell FileWatchCreation(3,"new.txt") {a=1}`
     start=Time.now
-    `./LittleShell.rb touch new.txt`
+    `./LittleShell touch new.txt`
     finish=Time.now
 
     #Postconditions
     assert_equal(1,a)
     assert_equal(3,(finish-start).round)
 
-    `./LittleShell.rb rm new.txt`        
+    `./LittleShell rm new.txt`        
   end
 
-  def test_file_watch_alteru
+  def test_file_watch_alter
     a=0
-    `./LittleShell.rb touch new.txt`
+    `./LittleShell touch new.txt`
     #Preconditions
     assert_equal(0,a)
-    assert(`./LittleShell.rb ls`.include? "new.txt")
+    assert(`./LittleShell ls`.include? "new.txt")
 
-    `./LittleShell.rb FileWatchAlter(4,"new.txt") {a=1}`
+    `./LittleShell FileWatchAlter(4,"new.txt") {a=1}`
     start=Time.now
-    `./LittleShell.rb touch new.txt`
+    `./LittleShell touch new.txt`
     finish=Time.now
 
     #Postconditions
     assert_equal(1,a)
     assert_equal(4,(finish-start).round)
 
-    `./LittleShell.rb rm new.txt`    
+    `./LittleShell rm new.txt`    
   end
 
   def test_file_watch_destroy
     a=0
-    `./LittleShell.rb touch new.txt`
+    `./LittleShell touch new.txt`
     #Preconditions
     assert_equal(0,a)
-    assert(!(`./LittleShell.rb ls`.include? "new.txt"))
+    assert(!(`./LittleShell ls`.include? "new.txt"))
 
-    `./LittleShell.rb FileWatchDestroy(5,"new.txt") {a=1}`
+    `./LittleShell FileWatchDestroy(5,"new.txt") {a=1}`
     start=Time.now
-    `./LittleShell.rb rm new.txt`
+    `./LittleShell rm new.txt`
     finish=Time.now
 
     #Postconditions
