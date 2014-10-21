@@ -1,6 +1,13 @@
 require 'minitest/autorun'
 require 'time'
 
+=begin
+This class runs tests for our LittleShell. It does this by
+executing the shell and passing it commands. This runs
+the shell for only the command passed to it, rather
+than continually getting input from stdin.
+=end
+
 class TestLittleShell<Minitest::Test
 
   def test_pwd
@@ -144,9 +151,19 @@ class TestLittleShell<Minitest::Test
     `./LittleShell rmdir cd_test`
   end
 
+  def test_pipe
+    #Preconditions
+    assert(!(`./LittleShell ls`.include? "hello.txt"))
+
+    text=`./LittleShell echo "hello" > hello.txt | cat`.rstrip
+
+    #Postconditions
+    assert_equal("hello",text)
+  end
+
   def test_delay_print
     start=Time.now
-    `./LittleShell delay_print(2,"hello")`
+    `./LittleShell delay_print "Hello" 2000`
     finish=Time.now
 
     #Postconditions
@@ -154,56 +171,50 @@ class TestLittleShell<Minitest::Test
   end
 
   def test_file_watch_creation
-    a=0
     #Preconditions
-    assert_equal(0,a)
     assert(!(`./LittleShell ls`.include? "new.txt"))
 
-    `./LittleShell FileWatchCreation(3,"new.txt") {a=1}`
+    a=`./LittleShell FileWatchCreation "new.txt" 3000 {echo "hello"}`.rstrip
     start=Time.now
     `./LittleShell touch new.txt`
     finish=Time.now
 
     #Postconditions
-    assert_equal(1,a)
+    assert_equal("hello",a)
     assert_equal(3,(finish-start).round)
 
     `./LittleShell rm new.txt`        
   end
 
   def test_file_watch_alter
-    a=0
     `./LittleShell touch new.txt`
     #Preconditions
-    assert_equal(0,a)
     assert(`./LittleShell ls`.include? "new.txt")
 
-    `./LittleShell FileWatchAlter(4,"new.txt") {a=1}`
+    a=`./LittleShell FileWatchAlter "new.txt" 4000 {echo "hello"}`.rstrip
     start=Time.now
     `./LittleShell touch new.txt`
     finish=Time.now
 
     #Postconditions
-    assert_equal(1,a)
+    assert_equal("hello",a)
     assert_equal(4,(finish-start).round)
 
     `./LittleShell rm new.txt`    
   end
 
   def test_file_watch_destroy
-    a=0
     `./LittleShell touch new.txt`
     #Preconditions
-    assert_equal(0,a)
     assert(!(`./LittleShell ls`.include? "new.txt"))
 
-    `./LittleShell FileWatchDestroy(5,"new.txt") {a=1}`
+    a=`./LittleShell FileWatchDestroy "new.txt" 5 {echo "hello"}`.rstrip
     start=Time.now
     `./LittleShell rm new.txt`
     finish=Time.now
 
     #Postconditions
-    assert_equal(1,a)
+    assert_equal("hello",a)
     assert_equal(5,(finish-start).round)
   end
 
