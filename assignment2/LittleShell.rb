@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby
 require 'shellwords'
 
+prompt="LittleShell-$: "
+
 commands={'cd'=>lambda{|newdir| Dir.chdir(newdir)},
-  'delay_print'=>lambda{|delay,message| execute("sleep #{delay} && echo \"#{message}\" &")}
+  'delay_print'=>lambda{|delay,message| execute("(sleep #{delay} && echo "" && echo \"#{message}\") &")}
 }
 
 def execute(command)
@@ -12,7 +14,6 @@ end
 
 if ARGV.empty?
   input=$stdin
-  prompt="LittleShell-$: "
   loop do
     $stdout.print prompt
     user_in=input.gets.strip
@@ -20,7 +21,7 @@ if ARGV.empty?
     if (commands[command])
       commands[command].call(*args)
     else
-      execute(command)
+      execute(user_in)
     end
   end
 else
