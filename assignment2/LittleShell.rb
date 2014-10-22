@@ -1,15 +1,21 @@
 #!/usr/bin/env ruby
 require 'shellwords'
+require './DelayPrint'
 
 prompt="LittleShell-$: "
 
 commands={'cd'=>lambda{|newdir| Dir.chdir(newdir)},
-  'delay_print'=>lambda{|delay,message| execute("(sleep #{delay} && echo "" && echo \"#{message}\") &")}
+  'delay_print'=>lambda{|delay,message| exec_nonblock(DelayPrint.delay_print(delay.to_i,message))}
 }
 
 def execute(command)
   pid=fork {exec command}
   Process.wait pid
+end
+
+def exec_nonblock(command)
+  pid=fork {command}
+  Process.detach pid
 end
 
 if ARGV.empty?
