@@ -3,8 +3,8 @@ require 'shellwords'
 require 'getoptlong'
 require './DelayPrint'
 
-all_commands=['pwd','mkdir','touch','mv','ls','rm','rmdir','cat','echo','cp','cd','delay_print','FileWatchCreation','FileWatchAlter','FileWatchDestroy']
-flags={'ls'=>['--all','-a','-l'],'rm'=>['--recursive','-r','--force','f']}
+command_flags={'ls'=>['--all','-a','-l'],'rm'=>['--recursive','-r','--force','f'],'pwd'=>[],'mkdir'=>[],
+  'echo'=>['-e','-n'],'cp'=>[],'cd'=>[],'delay_print'=>[],'FileWatchCreation'=>[],'FileWatchAlter'=>[],'FileWatchDestroy'=>[]}
 
 prompt="LittleShell-$: "
 
@@ -24,7 +24,7 @@ if ARGV.empty?
     user_in=input.gets.strip
     good_command=true
     command,*args=Shellwords.shellsplit(user_in)
-    if !all_commands.include? command
+    if !command_flags.include? command
       puts "Command #{command} not recognized"
       good_command=false
     end
@@ -33,11 +33,17 @@ if ARGV.empty?
                         ['--all','-a',GetoptLong::NO_ARGUMENT],
                         ['-l',GetoptLong::NO_ARGUMENT],
                         ['--recursive','-r',GetoptLong::NO_ARGUMENT],
-                        ['--force','-f',GetoptLong::NO_ARGUMENT]
+                        ['--force','-f',GetoptLong::NO_ARGUMENT],
+                        ['-n',GetoptLong::NO_ARGUMENT],
+                        ['-e',GetoptLong::NO_ARGUMENT]                        
                         )
     opts.quiet=true
     begin
       opts.each do |opt,arg|
+        if !command_flags[command].include? opt
+          puts "Invalid option passed to command: #{command}"
+          good_command=false
+        end
         case opt
         when '--force'
           puts "Permission denied: cannot force command"
@@ -57,7 +63,6 @@ if ARGV.empty?
     end
   end
 else
-  #Need to make this safer later
   input=ARGV.join(' ')
   execute(input)
 end
