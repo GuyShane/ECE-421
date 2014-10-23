@@ -1,15 +1,20 @@
 #!/usr/bin/env ruby
 require 'shellwords'
 require 'getoptlong'
-require './DelayPrint'
+require './Delay'
+require './FileWatch'
 
-command_flags={'ls'=>['--all','-a','-l'],'rm'=>['--recursive','-r','--force','f'],'pwd'=>[],'mkdir'=>[],
-  'echo'=>['-e','-n'],'cp'=>[],'cd'=>[],'delay_print'=>[],'FileWatchCreation'=>[],'FileWatchAlter'=>[],'FileWatchDestroy'=>[]}
+command_flags={'ls'=>['--all','-a','-l'],'rm'=>['--recursive','-r','--force','-f'],'pwd'=>[],'mkdir'=>[],
+  'echo'=>['-e','-n'],'cp'=>[],'cd'=>[],'delay_print'=>[],'FileWatchCreation'=>[],'FileWatchAlter'=>[],'FileWatchDestroy'=>[],
+  'touch'=>[]}
 
 prompt="LittleShell-$: "
 
 commands={'cd'=>lambda{|newdir| Dir.chdir(newdir)},
-  'delay_print'=>lambda{|delay,message| fork{DelayPrint.delay_print(delay.to_i,message)}}
+  'delay_print'=>lambda{|delay,message| fork{Delay.delay_print(delay.to_i,message)}},
+  'FileWatchCreation'=>lambda{|duration,files,block| fork{FileWatch.creation(duration,files,block.tr('{}',''))}},
+  'FileWatchDestroy'=>lambda{|duration,files,block| fork{FileWatch.destroy(duration,files,block.tr('{}',''))}},
+  'FileWatchAlter'=>lambda{|duration,files,block| fork{FileWatch.alter(duration,files,block.tr('{}',''))}}
 }
 
 def execute(command)
@@ -23,7 +28,11 @@ if ARGV.empty?
     $stdout.print prompt
     user_in=input.gets.strip
     good_command=true
+    reg_split=user_in.partition(/{.*}/)
+    user_in=reg_split[0]
+    block=reg_split[1]
     command,*args=Shellwords.shellsplit(user_in)
+    args << block
     if !command_flags.include? command
       puts "Command #{command} not recognized"
       good_command=false

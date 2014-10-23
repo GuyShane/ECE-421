@@ -1785,10 +1785,10 @@ static swig_module_info swig_module = {swig_types, 1, 0, 0, 0, 0};
 
 /* -------- TYPES TABLE (END) -------- */
 
-#define SWIG_init    Init_DelayPrint
-#define SWIG_name    "DelayPrint"
+#define SWIG_init    Init_Delay
+#define SWIG_name    "Delay"
 
-static VALUE mDelayPrint;
+static VALUE mDelay;
 
 #define SWIG_RUBY_THREAD_BEGIN_BLOCK
 #define SWIG_RUBY_THREAD_END_BLOCK
@@ -1805,6 +1805,7 @@ static VALUE mDelayPrint;
   #include <stdio.h>
   #include <unistd.h>
   extern void delay_print(int ms, char * message);
+  extern void delay(int ms);
   
 
 #include <limits.h>
@@ -1946,6 +1947,27 @@ _wrap_delay_print(int argc, VALUE *argv, VALUE self) {
   return Qnil;
 fail:
   if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_delay(int argc, VALUE *argv, VALUE self) {
+  int arg1 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_int(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), Ruby_Format_TypeError( "", "int","delay", 1, argv[0] ));
+  } 
+  arg1 = (int)(val1);
+  delay(arg1);
+  return Qnil;
+fail:
   return Qnil;
 }
 
@@ -2209,11 +2231,11 @@ SWIG_PropagateClientData(void) {
 #ifdef __cplusplus
 extern "C"
 #endif
-SWIGEXPORT void Init_DelayPrint(void) {
+SWIGEXPORT void Init_Delay(void) {
   size_t i;
   
   SWIG_InitRuntime();
-  mDelayPrint = rb_define_module("DelayPrint");
+  mDelay = rb_define_module("Delay");
   
   SWIG_InitializeModule(0);
   for (i = 0; i < swig_module.size; i++) {
@@ -2221,6 +2243,7 @@ SWIGEXPORT void Init_DelayPrint(void) {
   }
   
   SWIG_RubyInitializeTrackings();
-  rb_define_module_function(mDelayPrint, "delay_print", _wrap_delay_print, -1);
+  rb_define_module_function(mDelay, "delay_print", _wrap_delay_print, -1);
+  rb_define_module_function(mDelay, "delay", _wrap_delay, -1);
 }
 

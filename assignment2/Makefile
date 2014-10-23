@@ -117,10 +117,10 @@ extout_prefix =
 target_prefix = 
 LOCAL_LIBS = 
 LIBS = $(LIBRUBYARG_SHARED)  -lpthread -lrt -ldl -lcrypt -lm   -lc
-SRCS = delayPrint.c delayPrint_wrap.c
-OBJS = delayPrint.o delayPrint_wrap.o
-TARGET = delayPrint
-TARGET_NAME = delayPrint
+SRCS = delay_wrap.c delay.c
+OBJS = delay_wrap.o delay.o
+TARGET = delay
+TARGET_NAME = delay
 TARGET_ENTRY = Init_$(TARGET_NAME)
 DLLIB = $(TARGET).so
 EXTSTATIC = 
@@ -171,7 +171,7 @@ install-rb-default: pre-install-rb-default
 pre-install-rb: Makefile
 pre-install-rb-default: Makefile
 pre-install-rb-default:
-	$(ECHO) installing default delayPrint libraries
+	$(ECHO) installing default delay libraries
 ./.RUBYARCHDIR.time:
 	$(Q) $(MAKEDIRS) $(RUBYARCHDIR)
 	$(Q) $(TOUCH) $@

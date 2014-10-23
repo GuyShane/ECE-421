@@ -1,2 +1,2 @@
 require 'mkmf'
-create_makefile('delayPrint')
+create_makefile('delay')

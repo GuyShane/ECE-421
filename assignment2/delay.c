@@ -6,3 +6,7 @@ void delay_print(int ms, char * message) {
   printf("\n%s\n",message);
   printf("LittleShell-$: ");
 }
+
+void delay(int ms) {
+  usleep(ms*1000);  
+}
