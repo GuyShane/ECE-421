@@ -33,6 +33,7 @@ if ARGV.empty?
     block=reg_split[1]
     command,*args=Shellwords.shellsplit(user_in)
     args << block
+    args.delete("")
     if !command_flags.include? command
       puts "Command #{command} not recognized"
       good_command=false
