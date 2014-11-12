@@ -1,3 +1,5 @@
+require 'timeout'
+
 def readFile(filename)
   file=File.new(filename,"r")
   list=[]
@@ -10,7 +12,7 @@ end
 
 def merge(a,b)
   r = []
-  r << Thread.new{(a.first < b.first ? a : b).shift while a.length*b.length > 0}
+  r << (a.first < b.first ? a : b).shift while a.length*b.length > 0
   return r+a+b
 end
 
@@ -33,7 +35,7 @@ def tmerge(a,b,c)
       return c
     end
   else
-    j=binsearch(a[a.length/2],b)
+    j=linsearch(a[a.length/2],b)
     thread2=Thread.new{tmerge(a.take(a.length/2),b.take(j),c)}
     thread3=Thread.new{tmerge(a.drop(a.length/2),b.drop(j),c)}
     thread2.join
@@ -42,19 +44,21 @@ def tmerge(a,b,c)
   end
 end
 
-def binsearch(x,b)
-  
+def linsearch(x,b)
+  b.each_index {|e| return e if b[e]>=x}
+  return b.length-1
 end
 
 
 def mergesort(list)
   return list if list.size == 1
-  a = Thread.new{mergesort(list[0, list.size/2])}
-  b = Thread.new{mergesort(list[list.size/2, list.size])}
+  a = Thread.new{mergesort(list.take(list.size/2))}
+  b = Thread.new{mergesort(list.drop(list.size/2))}
   a.join
   b.join
-  c=[]
-  return merge(a.value, b.value,c)
+  c=Thread.new{merge(a.value,b.value)}
+  c.join
+  return c.value
 end
 
 module Sorter
@@ -71,12 +75,25 @@ module Sorter
       puts "Failed to parse arguments passed to sort"
       return
     end
-    sorted=mergesort(array)
-    print sorted
+    begin
+      sorted=Timeout.timeout(duration) do 
+        Thread.new{mergesort(array)}.value
+      end
+    rescue Timeout::Error
+      puts "Timed out. Sorry"
+      sorted=[]
+    end
+    return sorted
   end
 
   def Sorter.sorted?(list,&block)
-
+    list.inject do |a,b|
+      if (a>b)
+        return false
+      end
+      b
+    end
+    return true
   end
 
 end
