@@ -19,11 +19,15 @@ class GameScreen
   end
 
   def setup
-    buttons=[]
-    1.upto(10) {|i| 
-      buttons << @builder.get_object("button"+i)
-      buttons[i].signal_connect("clicked"){play(i)}
+    slots=[]
+    1.upto(100) {|i| 
+      slots << @builder.get_object("image"+i)
+      slots[i].set_image(@emptySlot)
+      event_box = Gtk::EventBox.new.add(buttons[i])
+      event_box.signal_connect("button_press_event") {puts "Clicked #{i}"}
     }
+    
+    
     
   end
 
