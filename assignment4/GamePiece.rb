@@ -1,0 +1,3 @@
+class GamePiece
+
+end

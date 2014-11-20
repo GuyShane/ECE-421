@@ -1,0 +1,3 @@
+class PieceController
+
+end
