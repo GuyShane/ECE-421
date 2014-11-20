@@ -1,7 +1,0 @@
-require 'gtk2'
-
-class MenuScreen
-  def initialize
-    
-  end
-end
