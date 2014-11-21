@@ -15,35 +15,49 @@ class GameBoard
     return @board[column].length
   end
 
-  def win?
-    @board.each_index do |row|
-      @board[row].each_index do |col|
-        next if @board[row][col]==:none
-        if col<@board[row].size-3
-          if @board[row][col]==@board[row][col+1] && @board[row][col+1]==@board[row][col+2] && @board[row][col+2]==@board[row][col+3]
-            return @board[row][col]
-          end
-        end
-        if row<@board.size-3
-          if @board[row][col]==@board[row+1][col] && @board[row+1][col]==@board[row+2][col] && @board[row+2][col]==@board[row+3][col]
-            return @board[row][col]
-          end
-        end
-
-        if row<@board.size-3 && col<@board[row].size-3
-          if @board[row][col]==@board[row+1][col+1] && @board[row+1][col+1]==@board[row+2][col+2] && @board[row+2][col+2]==@board[row+3][col+3]
-            return @board[row][col]
-          end
-        end
-
-        if row>3 && col<@board[row].size-3
-          if @board[row][col]==@board[row-1][col+1] && @board[row-1][col+1]==@board[row-2][col+2] && @board[row-2][col+2]==@board[row-3][col+3]
-            return @board[row][col]
-          end
-        end
-
-      end
-    end
-    return nil    
+  def draw?
+    draw=true
+    0.upto(9) {|i|
+      draw=draw && (full? (i))
+    }
+    return draw
   end
+
+  def win?
+    @board.each_index do |col|
+      @board[col].each_index do |row|
+        next if @board[col][row]==nil
+        if row<=6
+          return true if checkVertical(row,col)
+        end
+        if col<=6
+          return true if checkHorizontal(row,col)
+        end
+        if row<=6 && col<=6
+          return true if checkDiagRight(row,col)
+        end
+        if col>=3 && row<=6
+          return true if checkDiagLeft(row,col)
+        end
+      end
+    end    
+    return false
+  end
+
+  def checkVertical(row,col)
+    raise "Not implemented in this class"
+  end
+
+  def checkHorizontal(row,col)
+    raise "Not implemented in this class"
+  end
+
+  def checkDiagRight(row,col)
+    raise "Not implemented in this class"
+  end
+
+  def checkDiagLeft(row,col)
+    raise "Not implemented in this class"
+  end
+
 end
