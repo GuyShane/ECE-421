@@ -1,0 +1,3 @@
+class TestDistributed
+
+end
