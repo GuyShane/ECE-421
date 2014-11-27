@@ -1,0 +1,5 @@
+require "xmlrpc/server"
+
+class Server
+
+end
